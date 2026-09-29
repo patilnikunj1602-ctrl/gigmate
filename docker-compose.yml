@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # 🐬 1. MySQL Database Server Container Instance
+  mysqldb:
+    image: mysql:8.0
+    container_name: gigmate-mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gigmate_db
+    ports:
+      - "3306:3306"
+    networks:
+      - gigmate-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # ☕ 2. Spring Boot REST API Backend Container (Custom folder: backend)
+  backend:
+    build: ./backend
+    container_name: gigmate-backend-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/gigmate_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - mysqldb
+    networks:
+      - gigmate-network
+
+  # ⚛️ 3. React.js Frontend Production Container (Custom folder: gigmate-frontend)
+  frontend:
+    build: ./gigmate-frontend
+    container_name: gigmate-frontend-container
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - gigmate-network
+
+networks:
+  gigmate-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
