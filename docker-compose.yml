@@ -6,7 +6,7 @@ services:
     image: mysql:8.0
     container_name: gigmate-mysql-container
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: gigmate_db
     ports:
       - "3306:3306"
