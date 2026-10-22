@@ -1,0 +1,34 @@
+services:
+  # ☕ 1. Backend Web Service Module Configuration
+  - type: web
+    name: gigmate-backend-prod
+    runtime: docker
+    repo: https://github.com
+    plan: free
+    region: singapore # Matches your Aiven DB zone location to reduce network delay blocks
+    rootDir: backend
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://://aivencloud.com
+      - key: SPRING_DATASOURCE_USERNAME
+        value: avnadmin
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: your_actual_aiven_password_here # ⚠️ Paste your real Aiven password text string here
+      - key: gigmate.jwt.secret
+        value: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      - key: gigmate.jwt.expiration
+        value: 86400000
+
+  # ⚛️ 2. Frontend SPA Web Service Module Configuration
+  - type: web
+    name: gigmate-frontend-prod
+    runtime: docker
+    repo: https://github.com
+    plan: free
+    region: singapore
+    rootDir: gigmate-frontend
+    envVars:
+      - key: PORT
+        value: 80
