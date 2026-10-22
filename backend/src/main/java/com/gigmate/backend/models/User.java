@@ -1,5 +1,7 @@
 package com.gigmate.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -33,6 +36,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Size(max = 120)
     @Column(nullable = false)
@@ -43,6 +47,7 @@ public class User {
     private Role role;
 
     // Handles the mandatory platform onboarding verification checks from your presentation
+    @Builder.Default
     @Column(name = "is_verified", nullable = false)
     private boolean isVerified = false;
 

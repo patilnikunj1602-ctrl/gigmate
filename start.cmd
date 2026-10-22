@@ -35,7 +35,7 @@ if errorlevel 1 goto START_DOCKER
 cls
 echo ================================================================
 echo Launching GigMate via Docker Compose...
-echo MySQL: 3306 ^| Backend: 8080 ^| Frontend: 3000
+echo MySQL: 3307 ^| Backend: 8080 ^| Frontend: 3000
 echo ================================================================
 echo.
 docker compose up -d --build
