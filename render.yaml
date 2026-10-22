@@ -1,9 +1,10 @@
 services:
-  # ☕ 1. Backend Web Service Instance
+  # ==========================================================
+  # ☕ 1. GigMate Spring Boot REST API Backend (Docker Web Service)
+  # ==========================================================
   - type: web
-    name: gigmate-backend-prod
+    name: gigmate-backend
     runtime: docker
-    repo: https://github.com
     plan: free
     region: singapore
     rootDir: backend
@@ -11,24 +12,29 @@ services:
       - key: PORT
         value: 8080
       - key: SPRING_DATASOURCE_URL
-        value: jdbc:mysql://://aivencloud.com
+        sync: false # Set in Render Dashboard: jdbc:mysql://<host>:<port>/<dbname>?sslmode=require
       - key: SPRING_DATASOURCE_USERNAME
-        value: avnadmin
+        sync: false # Set in Render Dashboard: avnadmin
       - key: SPRING_DATASOURCE_PASSWORD
-        value: your_actual_aiven_password_here # ⚠️ Replace this with your exact Aiven database password!
+        sync: false # Set in Render Dashboard: your_password
       - key: GIGMATE_JWT_SECRET
-        value: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+        generateValue: true
       - key: GIGMATE_JWT_EXPIRATION
         value: 86400000
 
-  # ⚛️ 2. Frontend React Web Service Instance
+  # ==========================================================
+  # ⚛️ 2. GigMate React Vite Frontend (Fast, 100% Free Static Site)
+  # ==========================================================
   - type: web
-    name: gigmate-frontend-prod
-    runtime: docker
-    repo: https://github.com
-    plan: free
-    region: singapore
+    name: gigmate-frontend
+    runtime: static
     rootDir: gigmate-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
-      - key: PORT
-        value: 80
+      - key: VITE_API_BASE_URL
+        value: https://gigmate-backend.onrender.com/api
